@@ -1,4 +1,4 @@
-/// You can ignore this file, it's always the same functions
+/// [Erratum: Exceptional update] You can ignore this file, it's always the same functions
 import Foundation
 
 // MARK: API
@@ -29,7 +29,10 @@ private extension Launcher {
     }
 
     static func split(entry: String) -> [String] {
-        let result = Array(entry.components(separatedBy: "\n").dropLast()) // Last line is always an empty line
+        // Begin updates
+        let updatedEntry = entry.replacingOccurrences(of: "\n\n", with: "\n-\n")
+        let result = Array(updatedEntry.components(separatedBy: "\n").dropLast()) // Last line is always an empty line
+        // End updates
         guard !result.isEmpty else {
             D.log(D.errorEmptyInput)
             return []
