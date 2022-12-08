@@ -1,7 +1,7 @@
 /// The interesting file is this one
 import Foundation
 
-resolvePartOne(Launcher.example)
+resolvePartTwo(Launcher.example)
 
 func resolvePartOne(_ input: [String]) {
     
@@ -15,10 +15,12 @@ func resolvePartOne(_ input: [String]) {
 
 func resolvePartTwo(_ input: [String]) {
     
-    // TODO: Solve
+    let tree = parse(Array(input.dropFirst()))
+    let validSums: [Int] = cover(tree, sizes: [])
+    let sizeToDelete = findPerfectSizeToDelete(within: validSums)
     
     D.log(D.solution, newlines: true)
-    print()
+    print(sizeToDelete)
 }
 
 // MARK: - Special parsing
@@ -108,6 +110,9 @@ enum cmd {
 extension Int {
     static let limit = 100000
     static let overLimit = -1
+    
+    static let diskSpace = 70000000
+    static let updateSpaceNeed = 30000000
 }
 
 // MARK: - Solution
@@ -159,4 +164,48 @@ func coverWithLimit(_ tree: Tree, validSizes: [Int]) -> [Int] {
     tree.computedSize = size
     newSizes.append(size)
     return newSizes
+}
+
+func cover(_ tree: Tree, sizes: [Int]) -> [Int] {
+    // DFS - computing leaf sizes (no aborting size)
+    
+    var newSizes: [Int] = sizes
+    // If leaf, just compute or put overLimit
+    guard !tree.isLeaf else {
+        let size = tree.leafSize
+        tree.computedSize = size
+        newSizes.append(size)
+        return newSizes
+    }
+    
+    // Else cover all children
+    for childTree in tree.childTrees {
+        if childTree.computedSize == nil {
+            newSizes = cover(childTree, sizes: newSizes)
+        }
+    }
+    var size = tree.leafSize
+    // Add each child tree sum to leaf size
+    for childTree in tree.childTrees {
+        let childTreeSum: Int = childTree.computedSize!
+        size += childTreeSum
+    }
+    
+    // If we arrive here, tree size is valid
+    tree.computedSize = size
+    newSizes.append(size)
+    return newSizes
+}
+
+func findPerfectSizeToDelete(within sizes: [Int]) -> Int {
+    let occupiedSpace = sizes.max() ?? 0 // Root size
+    let freeSpace = Int.diskSpace - occupiedSpace
+    guard freeSpace < Int.updateSpaceNeed else { return 0 } // No need for deletion
+    let minSpaceToDelete = Int.updateSpaceNeed - freeSpace
+    
+    let minDiff: Int = sizes
+        .map { $0 - minSpaceToDelete }
+        .filter { $0 >= 0 }
+        .min() ?? 0
+    return minDiff + minSpaceToDelete
 }
