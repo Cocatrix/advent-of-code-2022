@@ -1,7 +1,7 @@
 /// The interesting file is this one
 import Foundation
 
-resolvePartOne(Launcher.example)
+resolvePartTwo(Launcher.example)
 
 func resolvePartOne(_ input: [String]) {
     
@@ -15,10 +15,12 @@ func resolvePartOne(_ input: [String]) {
 
 func resolvePartTwo(_ input: [String]) {
     
-    // TODO: Solve
+    let pairs: [SectionPair] = parseSectionPairs(input)
+    let containedArray: [Bool] = pairs.map { getWhetherSectionsOverlap($0) }
+    let containedCount: Int = containedArray.filter { $0 }.count
     
     D.log(D.solution, newlines: true)
-    print()
+    print(containedCount)
 }
 
 typealias Section = (begin: Int, end: Int)
@@ -34,4 +36,12 @@ func getWhetherOneSectionIsFullyContainedInOther(_ pair: SectionPair) -> Bool {
     let rhsIncludedInLhs = (pair.lhs.begin <= pair.rhs.begin) && (pair.lhs.end >= pair.rhs.end)
     let lhsIncludedInRhs = (pair.rhs.begin <= pair.lhs.begin) && (pair.rhs.end >= pair.lhs.end)
     return rhsIncludedInLhs || lhsIncludedInRhs
+}
+
+func getWhetherSectionsOverlap(_ pair: SectionPair) -> Bool {
+    if (pair.lhs.begin <= pair.rhs.begin) {
+        return pair.lhs.end >= pair.rhs.begin
+    } else {
+        return pair.rhs.end >= pair.lhs.begin
+    }
 }
