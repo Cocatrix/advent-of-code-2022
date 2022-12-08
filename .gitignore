@@ -1,0 +1,11 @@
+*.iml
+local.properties
+captures/
+**/.DS_Store
+*.hprof
+**/*.xcworkspace/xcshareddata
+**/xcuserdata/
+**/*.xcuserstate
+**/*.xcodeproj
+**/*.entitlements
+**/static.xcconfig
