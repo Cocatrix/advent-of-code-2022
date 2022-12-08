@@ -1,4 +1,4 @@
-/// You can ignore this file, it's always the same functions
+/// [Erratum: exceptional update] You can ignore this file, it's always the same functions
 import Foundation
 
 // MARK: Parse string
@@ -15,13 +15,13 @@ public extension String {
     }
 
     var parsingTwoInts: (Int, Int) {
-        let splitString = split(separator: " ").map { String($0) }
+        let splitString = split(separator: "-").map { String($0) } // Updated separator
         guard splitString.count > 1 else { return (0, 0) }
         return (Int(splitString[0])!, Int(splitString[1])!)
     }
 
     var parsingTwoStrings: (String, String) {
-        let splitString = split(separator: " ").map { String($0) }
+        let splitString = split(separator: ",").map { String($0) } // Updated separator
         guard splitString.count > 1 else { return ("", "") }
         return (splitString[0], splitString[1])
     }
