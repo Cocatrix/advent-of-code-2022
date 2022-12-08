@@ -1,7 +1,7 @@
 /// The interesting file is this one
 import Foundation
 
-resolvePartOne(Launcher.example)
+resolvePartTwo(Launcher.example)
 
 func resolvePartOne(_ input: [String]) {
     
@@ -16,10 +16,14 @@ func resolvePartOne(_ input: [String]) {
 
 func resolvePartTwo(_ input: [String]) {
     
-    // TODO: Solve
+    guard let stream = input.first else {
+        return
+    }
+    let solution = getFirstIndex(of: stream, minChars: Int.bigMinDistinctChars)
+
     
     D.log(D.solution, newlines: true)
-    print()
+    print(solution)
 }
 
 extension String {
@@ -33,6 +37,7 @@ extension String {
 
 extension Int {
     static let minDistinctChars: Int = 4 // for Part 1
+    static let bigMinDistinctChars: Int = 14 // for Part 2
 }
 
 func getFirstIndex(of stream: String, minChars: Int) -> Int {
