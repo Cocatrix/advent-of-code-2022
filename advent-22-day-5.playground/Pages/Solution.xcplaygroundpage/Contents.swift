@@ -1,7 +1,7 @@
 /// The interesting file is this one
 import Foundation
 
-resolvePartOne(Launcher.example)
+resolvePartTwo(Launcher.example)
 
 func resolvePartOne(_ input: [String]) {
     
@@ -17,10 +17,14 @@ func resolvePartOne(_ input: [String]) {
 
 func resolvePartTwo(_ input: [String]) {
     
-    // TODO: Solve
+    let (crates, moves) = parse(input)
+    let solvedCrates = apply2(moves: moves, to: crates)
+    let solution: String = solvedCrates
+        .map { $0.first }
+        .reduce("", { "\($0)\($1)" })
     
     D.log(D.solution, newlines: true)
-    print()
+    print(solution)
 }
 
 // MARK: - Special parsing
@@ -131,10 +135,27 @@ extension Array where Element == Stack {
             self[move.to - 1].add(self[move.from - 1].removeLast())
         }
     }
+    
+    mutating func apply2(move: Move) {
+        var removedCrates: [String] = []
+        for _ in 1...move.move {
+            removedCrates.append(self[move.from - 1].removeLast())
+        }
+        for crate in removedCrates.reversed() {
+            self[move.to - 1].add(crate)
+        }
+        
+    }
 }
 
 func apply(moves: [Move], to crateStack: [Stack]) -> [Stack] {
     var crates = crateStack
     moves.forEach { crates.apply(move: $0) }
+    return crates
+}
+
+func apply2(moves: [Move], to crateStack: [Stack]) -> [Stack] {
+    var crates = crateStack
+    moves.forEach { crates.apply2(move: $0) }
     return crates
 }
